@@ -229,6 +229,17 @@
             gap: 0.25rem;
         }
 
+        .pricing-type-select {
+            width: 100%;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
         .price-row {
             margin-top: auto;
             display: flex;
@@ -521,9 +532,13 @@
                 <select class="form-control" id="targetProduct" onchange="loadProductMetadata()">
                 </select>
             </div>
-            <div class="form-group">
-                <label>Set Rate Surcharge (₦)</label>
+            <div class="form-group" id="adminPriceGroup">
+                <label>Set Rate Surcharge / Bundle Price (₦)</label>
                 <input type="number" class="form-control" id="modifyPrice">
+            </div>
+            <div class="form-group" id="adminYardPriceGroup" style="display: none;">
+                <label>Set Price Per Yard (₦)</label>
+                <input type="number" class="form-control" id="modifyYardPrice">
             </div>
             <div class="form-group">
                 <label>Available Quantity (Units)</label>
@@ -580,14 +595,18 @@
             {
                 id: "item-white-hose",
                 name: "White Hose Bundle",
-                price: 8000,
+                price: 8000, 
+                yardPrice: 1200, 
+                hasOptions: true,
                 stockCount: 15,
                 imgUrl: "https://i.ibb.co/7tWfYZb6/695d126f2b0aeb1f6adcfd34636a228f.jpg"
             },
             {
                 id: "item-orange-hose",
                 name: "Orange Hose Bundle",
-                price: 8000,
+                price: 8000, 
+                yardPrice: 1200, 
+                hasOptions: true,
                 stockCount: 15,
                 imgUrl: "https://i.ibb.co/mFhzf0WR/8adc628a1102026a4cbb8cab7bad76af.jpg"
             }
@@ -631,9 +650,32 @@
             updateCartState(productId, parsed);
         }
 
+        function handleTypeSelectionChange(productId, selectedMode) {
+            if (!cartState[productId]) {
+                cartState[productId] = { qty: 0, mode: selectedMode };
+            } else {
+                cartState[productId].mode = selectedMode;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            const targetDisplayPrice = selectedMode === 'yard' ? product.yardPrice : product.price;
+            const targetLabel = selectedMode === 'yard' ? 'Price (Per Yard)' : 'Price (Bundle)';
+            
+            document.getElementById(`price-val-${productId}`).innerText = `₦${targetDisplayPrice.toLocaleString()}`;
+            document.getElementById(`price-label-${productId}`).innerText = targetLabel;
+            
+            calculateCartTotals();
+        }
+
         function updateCartState(productId, qty) {
             if (qty > 0) {
-                cartState[productId] = qty;
+                if (!cartState[productId]) {
+                    const selectEl = document.getElementById(`select-type-${productId}`);
+                    const selectedMode = selectEl ? selectEl.value : 'bundle';
+                    cartState[productId] = { qty: qty, mode: selectedMode };
+                } else {
+                    cartState[productId].qty = qty;
+                }
             } else {
                 delete cartState[productId];
             }
@@ -647,9 +689,12 @@
             Object.keys(cartState).forEach(pid => {
                 const product = products.find(p => p.id === pid);
                 if (product) {
-                    const quantity = cartState[pid];
+                    const quantity = cartState[pid].qty;
+                    const mode = cartState[pid].mode || 'bundle';
+                    const activeUnitPrice = (mode === 'yard' && product.hasOptions) ? product.yardPrice : product.price;
+                    
                     totalItemsCount += quantity;
-                    totalCurrencyCost += (product.price * quantity);
+                    totalCurrencyCost += (activeUnitPrice * quantity);
                 }
             });
 
@@ -672,10 +717,14 @@
             Object.keys(cartState).forEach((pid, index) => {
                 const product = products.find(p => p.id === pid);
                 if (product) {
-                    const qty = cartState[pid];
-                    const dynamicSubtotal = product.price * qty;
+                    const qty = cartState[pid].qty;
+                    const mode = cartState[pid].mode || 'bundle';
+                    const activeUnitPrice = (mode === 'yard' && product.hasOptions) ? product.yardPrice : product.price;
+                    const modeLabel = product.hasOptions ? ` (${mode === 'yard' ? 'Per Yard' : 'Full Bundle'})` : '';
+                    
+                    const dynamicSubtotal = activeUnitPrice * qty;
                     totalCost += dynamicSubtotal;
-                    messageString += `${index + 1}. *${product.name}*\n   Quantity: ${qty}\n   Subtotal: ₦${dynamicSubtotal.toLocaleString()}\n\n`;
+                    messageString += `${index + 1}. *${product.name}${modeLabel}*\n   Quantity/Length: ${qty}\n   Subtotal: ₦${dynamicSubtotal.toLocaleString()}\n\n`;
                 }
             });
 
@@ -712,7 +761,11 @@
                 }
                 
                 const btnDisabled = isAvailable ? '' : 'disabled';
-                const currentQtyValue = cartState[p.id] || 0;
+                const currentQtyValue = cartState[p.id] ? cartState[p.id].qty : 0;
+                const currentModeValue = cartState[p.id] ? cartState[p.id].mode : 'bundle';
+                
+                const displayPrice = (currentModeValue === 'yard' && p.hasOptions) ? p.yardPrice : p.price;
+                const displayLabel = (currentModeValue === 'yard' && p.hasOptions) ? 'Price (Per Yard)' : 'Price';
 
                 grid.innerHTML += `
                     <div class="product-card">
@@ -724,11 +777,19 @@
                             <h3 class="product-title">${p.name}</h3>
                             <div class="stock-indicator">
                                 <i data-lucide="boxes" size="14"></i> 
-                                ${isAvailable ? `${p.stockCount} units available` : 'Restocking soon'}
+                                ${isAvailable ? `${p.stockCount} items available` : 'Restocking soon'}
                             </div>
+                            
+                            ${p.hasOptions && isAvailable ? `
+                                <select class="pricing-type-select" id="select-type-${p.id}" onchange="handleTypeSelectionChange('${p.id}', this.value)">
+                                    <option value="bundle" ${currentModeValue === 'bundle' ? 'selected' : ''}>Full Bundle Pack</option>
+                                    <option value="yard" ${currentModeValue === 'yard' ? 'selected' : ''}>Measure Per Yard</option>
+                                </select>
+                            ` : ''}
+
                             <div class="price-row">
-                                <span class="price-label">Price</span>
-                                <span class="price-val">₦${p.price.toLocaleString()}</span>
+                                <span class="price-label" id="price-label-${p.id}">${displayLabel}</span>
+                                <span class="price-val" id="price-val-${p.id}">₦${displayPrice.toLocaleString()}</span>
                             </div>
                             
                             ${isAvailable ? `
@@ -764,6 +825,14 @@
             if (item) {
                 document.getElementById('modifyPrice').value = item.price;
                 document.getElementById('modifyStockCount').value = item.stockCount;
+                
+                const yardPriceGroup = document.getElementById('adminYardPriceGroup');
+                if (item.hasOptions) {
+                    yardPriceGroup.style.display = 'block';
+                    document.getElementById('modifyYardPrice').value = item.yardPrice || 0;
+                } else {
+                    yardPriceGroup.style.display = 'none';
+                }
             }
         }
 
@@ -798,12 +867,14 @@
                 products[idx].price = updatedPrice;
                 products[idx].stockCount = updatedStockCount;
                 
-                if (updatedStockCount <= 0 || (cartState[targetId] && cartState[targetId] > updatedStockCount)) {
-                     if(updatedStockCount <= 0) {
-                         delete cartState[targetId];
-                     } else {
-                         cartState[targetId] = updatedStockCount;
-                     }
+                if (products[idx].hasOptions) {
+                    products[idx].yardPrice = parseFloat(document.getElementById('modifyYardPrice').value) || 0;
+                }
+                
+                if (updatedStockCount <= 0) {
+                     delete cartState[targetId];
+                } else if (cartState[targetId] && cartState[targetId].qty > updatedStockCount) {
+                     cartState[targetId].qty = updatedStockCount;
                 }
                 
                 renderStorefront();
