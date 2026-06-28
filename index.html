@@ -3,457 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baloking Gas | Premium Gas Accessories & Supply</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>Baloking Gas | Premium Industrial Storefront</title>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         :root {
-            --bg-main: #0f1115;
-            --bg-surface: #161920;
-            --bg-card: #1c212b;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
             --accent-orange: #f97316;
             --accent-orange-hover: #ea580c;
-            --border-color: #2a313e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
             background-color: var(--bg-main);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.5;
-            overflow-x: hidden;
+            color: var(--text-primary);
+            padding-bottom: 60px;
         }
 
+        /* Top Navigation Header */
         header {
-            background-color: var(--bg-surface);
-            border-bottom: 2px solid var(--border-color);
-            padding: 20px 40px;
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        .brand-logo {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0.5rem;
             font-weight: 800;
-            font-size: 1.4rem;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
+            font-size: 1.3rem;
+            letter-spacing: -0.05em;
+            color: var(--text-primary);
         }
 
-        .brand-logo i {
+        .logo span {
             color: var(--accent-orange);
         }
 
-        .nav-actions button {
+        .admin-btn {
             background: transparent;
             border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 8px 16px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border-radius: 6px;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            transition: all 0.2s;
         }
 
-        .nav-actions button:hover {
+        .admin-btn:hover {
             border-color: var(--accent-orange);
-            color: var(--accent-orange);
+            color: var(--text-primary);
         }
 
+        /* Hero / Overview Section */
         .hero {
-            padding: 60px 40px;
-            background: linear-gradient(135deg, #161920 0%, #0f1115 100%);
-            border-bottom: 1px solid var(--border-color);
+            max-width: 1200px;
+            margin: 2.5rem auto 1.5rem;
+            padding: 0 1.5rem;
             text-align: center;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.3;
-            pointer-events: none;
         }
 
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-
-        .hero h1 span {
-            color: var(--accent-orange);
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
         }
 
         .hero p {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 2rem;
             font-size: 1rem;
+            line-height: 1.5;
         }
 
-        main {
-            max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 40px;
+        /* Corporate Trust Metric Counters */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
         }
 
-        .section-header {
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            color: var(--accent-orange);
             font-size: 1.25rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid var(--accent-orange);
-            padding-left: 12px;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-card p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin: 0;
+        }
+
+        /* Marketplace Product Showcase Grid */
+        .store-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
+            gap: 1.5rem;
         }
 
         .product-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
             display: flex;
             flex-direction: column;
             position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-4px);
-            border-color: #3b4556;
+            border-color: #475569;
         }
 
-        .status-badge {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .status-instock { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
-        .status-outofstock { background: rgba(239, 68, 68, 0.1); color: #f87171; }
-
-        .product-icon {
-            font-size: 2.5rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            margin-top: 10px;
-        }
-
-        .product-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .product-price {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.5rem;
-            color: var(--accent-orange);
-            font-weight: bold;
-            margin-top: auto;
-            padding-top: 15px;
-        }
-
-        .admin-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(10, 11, 13, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
+        .img-container {
+            width: 100%;
+            height: 240px;
+            background-color: #151f32;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            overflow: hidden;
         }
 
-        .admin-modal.active {
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-instock {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        .badge-outstock {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .product-info {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+        }
+
+        .product-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+        }
+
+        .price-row {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .price-val {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .order-btn {
+            width: 100%;
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+            text-decoration: none;
+        }
+
+        .order-btn:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        .order-btn.disabled {
+            background-color: #334155 !important;
+            color: #64748b !important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Modal Architecture Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .admin-box {
-            background-color: var(--bg-surface);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 500px;
-            padding: 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            position: relative;
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
         }
 
-        .close-admin {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-close {
             background: transparent;
             border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
+            color: var(--text-secondary);
             cursor: pointer;
         }
 
-        .admin-box h2 {
-            font-size: 1.4rem;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            letter-spacing: -0.5px;
-        }
-
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 6px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.375rem;
         }
 
-        .form-group input, .form-group select {
+        .form-control {
             width: 100%;
-            background-color: var(--bg-main);
+            background: var(--bg-main);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px;
-            color: var(--text-main);
-            font-family: inherit;
+            padding: 0.625rem;
+            border-radius: 8px;
+            color: white;
             font-size: 0.95rem;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--accent-orange);
         }
 
-        .btn-action {
-            background-color: var(--accent-orange);
-            color: #ffffff;
-            font-weight: 700;
-            text-transform: uppercase;
-            border: none;
-            padding: 14px;
-            width: 100%;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            margin-top: 10px;
-        }
-
-        .btn-action:hover {
-            background-color: var(--accent-orange-hover);
-        }
-
-        #adminControlPanel {
-            display: none;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 80px;
+        @media (max-width: 640px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-logo">
-            <i class="fas fa-gas-pump"></i> Baloking Gas
-        </div>
-        <div class="nav-actions">
-            <button id="openAdminBtn"><i class="fas fa-user-shield"></i> Admin Panel</button>
+        <div class="nav-container">
+            <div class="logo">
+                <i data-lucide="flame" style="color: var(--accent-orange)"></i>
+                BALOKING <span>GAS</span>
+            </div>
+            <button class="admin-btn" onclick="openAuthModal()">
+                <i data-lucide="shield-alert" size="16"></i> Admin Control
+            </button>
         </div>
     </header>
 
-    <section class="hero">
-        <h1>Baloking <span>Gas & Accessories</span></h1>
-        <p>Premium grade certified engineering components, cylinders, and high-pressure system accessories for secure industrial and domestic deployment.</p>
-    </section>
+    <main class="hero">
+        <h1>Industrial Gas & Supply Depot</h1>
+        <p>Premium grade LPG distribution, safety certified cylinders, and accessories delivered directly safely with absolute speed precision.</p>
 
-    <main>
-        <div class="section-header">Live Catalog Inventory</div>
-        <div class="products-grid" id="catalogGrid"></div>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>100%</h3>
+                <p>Safety Certified</p>
+            </div>
+            <div class="metric-card">
+                <h3>24/7</h3>
+                <p>Rapid Dispatch</p>
+            </div>
+            <div class="metric-card">
+                <h3>SON</h3>
+                <p>Standard Approved</p>
+            </div>
+        </div>
     </main>
 
-    <div class="admin-modal" id="adminModal">
-        <div class="admin-box">
-            <button class="close-admin" id="closeAdminBtn"><i class="fas fa-times"></i></button>
-            
-            <div id="adminAuthArea">
-                <h2>Admin Verification</h2>
-                <div class="form-group">
-                    <label>Security Access Code</label>
-                    <input type="password" id="adminPassInput" placeholder="Enter secure admin password">
-                </div>
-                <button class="btn-action" id="loginAdminBtn">Verify Credentials</button>
+    <section class="store-container">
+        <div class="products-grid" id="storefront-grid">
             </div>
+    </section>
 
-            <div id="adminControlPanel">
-                <h2>Inventory Management</h2>
-                <div class="form-group">
-                    <label>Select Item to Modify</label>
-                    <select id="editItemSelect">
-                        <option value="3kg">3kg Gas Cylinder</option>
-                        <option value="6kg">6kg Gas Cylinder</option>
-                        <option value="12.5kg">12.5kg Gas Cylinder</option>
-                        <option value="hose">Gas Hose (Per Meter)</option>
-                        <option value="regulator">Industrial Regulator</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Update Price (₦)</label>
-                    <input type="number" id="editPriceInput" placeholder="Enter updated numeric price">
-                </div>
-                <div class="form-group">
-                    <label>Stock Availability Status</label>
-                    <select id="editStockSelect">
-                        <option value="true">In Stock</option>
-                        <option value="false">Out of Stock</option>
-                    </select>
-                </div>
-                <button class="btn-action" id="saveProductBtn">Publish Modifications</button>
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="font-weight: 700;">Security Clearance</h3>
+                <button class="modal-close" onclick="closeModal('authModal')"><i data-lucide="x"></i></button>
             </div>
+            <div class="form-group">
+                <label>Enter Access Pin</label>
+                <input type="password" class="form-control" id="accessPin" placeholder="••••••••">
+            </div>
+            <button class="order-btn" onclick="verifyAccess()">Verify Identity</button>
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 Baloking Gas. High-Pressure System Architecture.
-    </footer>
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 style="font-weight: 700;">Inventory Modifier</h3>
+                <button class="modal-close" onclick="closeModal('adminModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="form-group">
+                <label>Select Target Inventory Unit</label>
+                <select class="form-control" id="targetProduct" onchange="loadProductMetadata()">
+                    </select>
+            </div>
+            <div class="form-group">
+                <label>Set Rate Surcharge (₦)</label>
+                <input type="number" class="form-control" id="modifyPrice">
+            </div>
+            <div class="form-group">
+                <label>Availability Matrix Status</label>
+                <select class="form-control" id="modifyStock">
+                    <option value="true">In Stock</option>
+                    <option value="false">Out of Stock / Restocking</option>
+                </select>
+            </div>
+            <button class="order-btn" onclick="applySystemModifications()">Publish Modifications</button>
+        </div>
+    </div>
 
     <script>
-        let inventory = {
-            "3kg": { name: "3kg Gas Cylinder", price: 15000, inStock: true, icon: "fa-fill-drip" },
-            "6kg": { name: "6kg Gas Cylinder", price: 28000, inStock: true, icon: "fa-fill-drip" },
-            "12.5kg": { name: "12.5kg Gas Cylinder", price: 45000, inStock: true, icon: "fa-fill-drip" },
-            "hose": { name: "High-Pressure Gas Hose", price: 3500, inStock: true, icon: "fa-bezier-curve" },
-            "regulator": { name: "Industrial Gas Regulator", price: 18500, inStock: false, icon: "fa-gauge" }
-        };
+        // Store State Architecture Configuration Data Models
+        let products = [
+            {
+                id: "item-6kg",
+                name: "6kg Gas Cylinder",
+                desc: "Compact safety cylinder with integrated base support ring and standard burner configurations.",
+                price: 25000,
+                inStock: true,
+                imgUrl: "https://i.ibb.co/9Hc50q0R/ed7820892edd24e6caa799cc38b7aab4.jpg"
+            },
+            {
+                id: "item-12kg",
+                name: "12.5kg Gas Cylinder",
+                desc: "High durability steel containment system optimized for structural integrity and longevity.",
+                price: 45000,
+                inStock: true,
+                imgUrl: "https://images.unsplash.com/photo-1626264290756-12ef24a76def?auto=format&fit=crop&w=400&q=80"
+            },
+            {
+                id: "item-regulator",
+                name: "High-Pressure Regulator",
+                desc: "Equipped with automatic emergency flow shut-off leak prevention monitoring systems.",
+                price: 12000,
+                inStock: true,
+                imgUrl: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80"
+            }
+        ];
 
-        const catalogGrid = document.getElementById("catalogGrid");
-        const adminModal = document.getElementById("adminModal");
-        const openAdminBtn = document.getElementById("openAdminBtn");
-        const closeAdminBtn = document.getElementById("closeAdminBtn");
-        const loginAdminBtn = document.getElementById("loginAdminBtn");
-        const saveProductBtn = document.getElementById("saveProductBtn");
-        
-        const adminAuthArea = document.getElementById("adminAuthArea");
-        const adminControlPanel = document.getElementById("adminControlPanel");
-        const adminPassInput = document.getElementById("adminPassInput");
+        // Core App Routing Engines 
+        function renderStorefront() {
+            const grid = document.getElementById('storefront-grid');
+            grid.innerHTML = '';
 
-        function renderCatalog() {
-            catalogGrid.innerHTML = "";
-            for (const key in inventory) {
-                const item = inventory[key];
-                const card = document.createElement("div");
-                card.className = "product-card";
-                
-                const badgeClass = item.inStock ? "status-instock" : "status-outofstock";
-                const badgeText = item.inStock ? "AVAILABLE" : "OUT OF STOCK";
-                
-                card.innerHTML = `
-                    <span class="status-badge ${badgeClass}">${badgeText}</span>
-                    <div class="product-icon"><i class="fas ${item.icon}"></i></div>
-                    <div class="product-name">${item.name}</div>
-                    <div class="product-price">₦${item.price.toLocaleString()}</div>
+            products.forEach(p => {
+                const badgeClass = p.inStock ? 'badge-instock' : 'badge-outstock';
+                const badgeText = p.inStock ? 'Available' : 'Out of Stock';
+                const btnDisabled = p.inStock ? '' : 'disabled';
+                const btnText = p.inStock ? 'Order via WhatsApp' : 'Restocking';
+
+                // WhatsApp deep link compiler engine text payload structure
+                const messageText = encodeURIComponent(`Hello Baloking Gas, I want to purchase the ${p.name} currently listed at ₦${p.price.toLocaleString()}. Please confirm availability and delivery slot details.`);
+                const whatsappUrl = `https://wa.me/2348123456789?text=${messageText}`;
+
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="${p.imgUrl}" alt="${p.name}">
+                            <span class="badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${p.name}</h3>
+                            <p class="product-desc">${p.desc}</p>
+                            <div class="price-row">
+                                <span class="price-label">Price Surcharge</span>
+                                <span class="price-val">₦${p.price.toLocaleString()}</span>
+                            </div>
+                            <a href="${whatsappUrl}" target="_blank" class="order-btn ${btnDisabled}">
+                                <i data-lucide="phone"></i> ${btnText}
+                            </a>
+                        </div>
+                    </div>
                 `;
-                catalogGrid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Dropdown option loader engine
+        function populateAdminOptions() {
+            const selector = document.getElementById('targetProduct');
+            selector.innerHTML = '';
+            products.forEach(p => {
+                selector.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+            });
+        }
+
+        function loadProductMetadata() {
+            const targetId = document.getElementById('targetProduct').value;
+            const item = products.find(p => p.id === targetId);
+            if (item) {
+                document.getElementById('modifyPrice').value = item.price;
+                document.getElementById('modifyStock').value = item.inStock.toString();
             }
         }
 
-        openAdminBtn.addEventListener("click", () => adminModal.classList.add("active"));
-        closeAdminBtn.addEventListener("click", () => {
-            adminModal.classList.remove("active");
-            adminAuthArea.style.display = "block";
-            adminControlPanel.style.display = "none";
-            adminPassInput.value = "";
-        });
+        // Modal State Controller Handlers
+        function openAuthModal() {
+            document.getElementById('accessPin').value = '';
+            document.getElementById('authModal').classList.add('active');
+        }
 
-        loginAdminBtn.addEventListener("click", () => {
-            if (adminPassInput.value === "admin123") {
-                adminAuthArea.style.display = "none";
-                adminControlPanel.style.display = "block";
-                const activeKey = document.getElementById("editItemSelect").value;
-                document.getElementById("editPriceInput").value = inventory[activeKey].price;
-                document.getElementById("editStockSelect").value = inventory[activeKey].inStock.toString();
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function verifyAccess() {
+            const inputPin = document.getElementById('accessPin').value;
+            if (inputPin === 'admin123') {
+                closeModal('authModal');
+                populateAdminOptions();
+                loadProductMetadata();
+                document.getElementById('adminModal').classList.add('active');
             } else {
-                alert("Invalid security password.");
+                alert('Invalid Security Credentials. Authentication Rejected.');
             }
-        });
+        }
 
-        document.getElementById("editItemSelect").addEventListener("change", function() {
-            const activeKey = this.value;
-            document.getElementById("editPriceInput").value = inventory[activeKey].price;
-            document.getElementById("editStockSelect").value = inventory[activeKey].inStock.toString();
-        });
+        function applySystemModifications() {
+            const targetId = document.getElementById('targetProduct').value;
+            const updatedPrice = parseFloat(document.getElementById('modifyPrice').value);
+            const updatedStock = document.getElementById('modifyStock').value === 'true';
 
-        saveProductBtn.addEventListener("click", () => {
-            const selectedKey = document.getElementById("editItemSelect").value;
-            const newPrice = parseFloat(document.getElementById("editPriceInput").value);
-            const newStockStatus = document.getElementById("editStockSelect").value === "true";
-
-            if (isNaN(newPrice) || newPrice <= 0) {
-                alert("Please declare a realistic price value.");
-                return;
+            const idx = products.findIndex(p => p.id === targetId);
+            if (idx !== -1) {
+                products[idx].price = updatedPrice;
+                products[idx].inStock = updatedStock;
+                renderStorefront();
+                closeModal('adminModal');
             }
+        }
 
-            inventory[selectedKey].price = newPrice;
-            inventory[selectedKey].inStock = newStockStatus;
-
-            renderCatalog();
-            alert(`Live updates applied for ${inventory[selectedKey].name}!`);
-            adminModal.classList.remove("active");
-            adminAuthArea.style.display = "block";
-            adminControlPanel.style.display = "none";
-            adminPassInput.value = "";
-        });
-
-        renderCatalog();
+        // Engine Startup Initializers
+        window.onload = function() {
+            renderStorefront();
+        };
     </script>
 </body>
 </html>
