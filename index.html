@@ -412,7 +412,9 @@
                 const btnText = p.inStock ? 'Order via WhatsApp' : 'Restocking';
 
                 const messageText = encodeURIComponent(`Hello Baloking Gas, I want to purchase the ${p.name} currently listed at ₦${p.price.toLocaleString()}. Please confirm availability.`);
-                const whatsappUrl = `https://wa.me/2348123456789?text=${messageText}`;
+                
+                // Updated WhatsApp number variable target configuration
+                const whatsappUrl = `https://wa.me/2348160922263?text=${messageText}`;
 
                 grid.innerHTML += `
                     <div class="product-card">
