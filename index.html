@@ -95,32 +95,12 @@
             margin-bottom: 0.5rem;
         }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            max-width: 800px;
-            margin: 2rem auto 3rem;
-        }
-
-        .metric-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .metric-card h3 {
-            color: var(--accent-orange);
-            font-size: 1.25rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .metric-card p {
+        .hero p {
             color: var(--text-secondary);
-            font-size: 0.75rem;
-            margin: 0;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1rem;
+            line-height: 1.5;
         }
 
         .store-container {
@@ -321,13 +301,6 @@
             outline: none;
             border-color: var(--accent-orange);
         }
-
-        @media (max-width: 640px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -346,20 +319,7 @@
 
     <main class="hero">
         <h1>Industrial Gas & Supply Depot</h1>
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <h3>100%</h3>
-                <p>Safety Certified</p>
-            </div>
-            <div class="metric-card">
-                <h3>24/7</h3>
-                <p>Rapid Dispatch</p>
-            </div>
-            <div class="metric-card">
-                <h3>SON</h3>
-                <p>Standard Approved</p>
-            </div>
-        </div>
+        <p>Premium grade LPG distribution, safety certified cylinders, and accessories delivered directly safely with absolute speed precision.</p>
     </main>
 
     <section class="store-container">
