@@ -29,7 +29,6 @@
             padding-bottom: 60px;
         }
 
-        /* Top Navigation Header */
         header {
             background-color: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(12px);
@@ -82,7 +81,6 @@
             color: var(--text-primary);
         }
 
-        /* Hero / Overview Section */
         .hero {
             max-width: 1200px;
             margin: 2.5rem auto 1.5rem;
@@ -97,21 +95,12 @@
             margin-bottom: 0.5rem;
         }
 
-        .hero p {
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        /* Corporate Trust Metric Counters */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             max-width: 800px;
-            margin: 0 auto 3rem;
+            margin: 2rem auto 3rem;
         }
 
         .metric-card {
@@ -134,7 +123,6 @@
             margin: 0;
         }
 
-        /* Marketplace Product Showcase Grid */
         .store-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -210,14 +198,7 @@
         .product-title {
             font-size: 1.125rem;
             font-weight: 700;
-            margin-bottom: 0.375rem;
-        }
-
-        .product-desc {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
             margin-bottom: 1.25rem;
-            line-height: 1.4;
         }
 
         .price-row {
@@ -269,7 +250,6 @@
             pointer-events: none;
         }
 
-        /* Modal Architecture Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -366,8 +346,6 @@
 
     <main class="hero">
         <h1>Industrial Gas & Supply Depot</h1>
-        <p>Premium grade LPG distribution, safety certified cylinders, and accessories delivered directly safely with absolute speed precision.</p>
-
         <div class="metrics-grid">
             <div class="metric-card">
                 <h3>100%</h3>
@@ -412,7 +390,7 @@
             <div class="form-group">
                 <label>Select Target Inventory Unit</label>
                 <select class="form-control" id="targetProduct" onchange="loadProductMetadata()">
-                    </select>
+                </select>
             </div>
             <div class="form-group">
                 <label>Set Rate Surcharge (₦)</label>
@@ -430,12 +408,10 @@
     </div>
 
     <script>
-        // Store State Architecture Configuration Data Models
         let products = [
             {
                 id: "item-6kg",
                 name: "6kg Gas Cylinder",
-                desc: "Compact safety cylinder with integrated base support ring and standard burner configurations.",
                 price: 25000,
                 inStock: true,
                 imgUrl: "https://i.ibb.co/9Hc50q0R/ed7820892edd24e6caa799cc38b7aab4.jpg"
@@ -443,7 +419,6 @@
             {
                 id: "item-12kg",
                 name: "12.5kg Gas Cylinder",
-                desc: "High durability steel containment system optimized for structural integrity and longevity.",
                 price: 45000,
                 inStock: true,
                 imgUrl: "https://images.unsplash.com/photo-1626264290756-12ef24a76def?auto=format&fit=crop&w=400&q=80"
@@ -451,14 +426,12 @@
             {
                 id: "item-regulator",
                 name: "High-Pressure Regulator",
-                desc: "Equipped with automatic emergency flow shut-off leak prevention monitoring systems.",
                 price: 12000,
                 inStock: true,
                 imgUrl: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80"
             }
         ];
 
-        // Core App Routing Engines 
         function renderStorefront() {
             const grid = document.getElementById('storefront-grid');
             grid.innerHTML = '';
@@ -469,8 +442,7 @@
                 const btnDisabled = p.inStock ? '' : 'disabled';
                 const btnText = p.inStock ? 'Order via WhatsApp' : 'Restocking';
 
-                // WhatsApp deep link compiler engine text payload structure
-                const messageText = encodeURIComponent(`Hello Baloking Gas, I want to purchase the ${p.name} currently listed at ₦${p.price.toLocaleString()}. Please confirm availability and delivery slot details.`);
+                const messageText = encodeURIComponent(`Hello Baloking Gas, I want to purchase the ${p.name} currently listed at ₦${p.price.toLocaleString()}. Please confirm availability.`);
                 const whatsappUrl = `https://wa.me/2348123456789?text=${messageText}`;
 
                 grid.innerHTML += `
@@ -481,9 +453,8 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
-                            <p class="product-desc">${p.desc}</p>
                             <div class="price-row">
-                                <span class="price-label">Price Surcharge</span>
+                                <span class="price-label">Price</span>
                                 <span class="price-val">₦${p.price.toLocaleString()}</span>
                             </div>
                             <a href="${whatsappUrl}" target="_blank" class="order-btn ${btnDisabled}">
@@ -496,7 +467,6 @@
             lucide.createIcons();
         }
 
-        // Dropdown option loader engine
         function populateAdminOptions() {
             const selector = document.getElementById('targetProduct');
             selector.innerHTML = '';
@@ -514,7 +484,6 @@
             }
         }
 
-        // Modal State Controller Handlers
         function openAuthModal() {
             document.getElementById('accessPin').value = '';
             document.getElementById('authModal').classList.add('active');
@@ -532,7 +501,7 @@
                 loadProductMetadata();
                 document.getElementById('adminModal').classList.add('active');
             } else {
-                alert('Invalid Security Credentials. Authentication Rejected.');
+                alert('Invalid Security Credentials.');
             }
         }
 
@@ -550,7 +519,6 @@
             }
         }
 
-        // Engine Startup Initializers
         window.onload = function() {
             renderStorefront();
         };
