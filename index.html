@@ -275,7 +275,6 @@
             pointer-events: none;
         }
 
-        /* Fixed Footer Cart Bar styling */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -490,10 +489,10 @@
         let products = [
             {
                 id: "item-6kg",
-                name: "6kg Gas Cylinder",
+                name: "6kg Complete",
                 price: 25000,
                 inStock: true,
-                imgUrl: "https://i.ibb.co/9Hc50q0R/ed7820892edd24e6caa799cc38b7aab4.jpg"
+                imgUrl: "https://i.ibb.co/wF3VFP10/5455f349d94656570c5463b79a1ae831.jpg"
             },
             {
                 id: "item-12kg",
@@ -518,7 +517,6 @@
             }
         ];
 
-        // State machine object dictionary tracker for quantity allocations
         let cartState = {};
 
         function changeQty(productId, amount) {
@@ -604,7 +602,6 @@
                 const badgeText = p.inStock ? 'Available' : 'Out of Stock';
                 const btnDisabled = p.inStock ? '' : 'disabled';
                 
-                // Read current values to prevent refresh state clears during admin panels adjustments
                 const currentQtyValue = cartState[p.id] || 0;
 
                 grid.innerHTML += `
@@ -687,7 +684,6 @@
                 products[idx].price = updatedPrice;
                 products[idx].inStock = updatedStock;
                 
-                // Drop from cart if marked out of stock by management modifications actions
                 if (!updatedStock) delete cartState[targetId];
                 
                 renderStorefront();
