@@ -197,6 +197,11 @@
             color: #ffffff;
         }
 
+        .badge-lowstock {
+            background-color: rgba(245, 158, 11, 0.9);
+            color: #ffffff;
+        }
+
         .badge-outstock {
             background-color: rgba(239, 68, 68, 0.9);
             color: #ffffff;
@@ -212,7 +217,16 @@
         .product-title {
             font-size: 1.125rem;
             font-weight: 700;
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stock-indicator {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .price-row {
@@ -512,58 +526,56 @@
                 <input type="number" class="form-control" id="modifyPrice">
             </div>
             <div class="form-group">
-                <label>Availability Matrix Status</label>
-                <select class="form-control" id="modifyStock">
-                    <option value="true">In Stock</option>
-                    <option value="false">Out of Stock / Restocking</option>
-                </select>
+                <label>Available Quantity (Units)</label>
+                <input type="number" class="form-control" id="modifyStockCount" min="0" placeholder="0">
             </div>
             <button class="order-btn" onclick="applySystemModifications()">Publish Modifications</button>
         </div>
     </div>
 
     <script>
+        // Track numerical stock limits
         let products = [
             {
                 id: "item-6kg",
                 name: "6kg Gas Cylinder",
                 price: 25000,
-                inStock: true,
+                stockCount: 12,
                 imgUrl: "https://i.ibb.co/9Hc50q0R/ed7820892edd24e6caa799cc38b7aab4.jpg"
             },
             {
                 id: "item-12kg",
                 name: "12.5kg Gas Cylinder",
                 price: 45000,
-                inStock: true,
+                stockCount: 8,
                 imgUrl: "https://i.ibb.co/PZQXrGXw/f28e977d5556d9d71f0d922d39a8fef1.jpg"
             },
             {
                 id: "item-regulator",
                 name: "Standard Transfer",
                 price: 12000,
-                inStock: true,
+                stockCount: 25,
                 imgUrl: "https://i.ibb.co/Xx43kWVH/93bd0db653a87dd5ded9c5dbb51af212.jpg"
             },
             {
                 id: "item-accessory",
                 name: "60kg Cylinder",
                 price: 15000,
-                inStock: true,
+                stockCount: 5,
                 imgUrl: "https://i.ibb.co/JwJXMVNk/a23ab44c0e9f8e242b442dcbc1a1a9d9.jpg"
             },
             {
                 id: "item-6kg-complete",
                 name: "6kg Complete Set",
                 price: 25000,
-                inStock: true,
+                stockCount: 10,
                 imgUrl: "https://i.ibb.co/wF3VFP10/5455f349d94656570c5463b79a1ae831.jpg"
             },
             {
                 id: "item-white-hose",
                 name: "Stainless Burner Complete",
                 price: 15000,
-                inStock: true,
+                stockCount: 18,
                 imgUrl: "https://i.ibb.co/nMGDRhvq/0157748126000e8e204725918e72bae3.jpg"
             }
         ];
@@ -571,19 +583,38 @@
         let cartState = {};
 
         function changeQty(productId, amount) {
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stockCount <= 0) return;
+
             const input = document.getElementById(`qty-${productId}`);
             if (!input) return;
             
             let currentQty = parseInt(input.value) || 0;
-            let newQty = Math.max(0, currentQty + amount);
-            input.value = newQty;
+            let newQty = currentQty + amount;
             
+            // Limit selection by available physical stock constraints
+            if (newQty > product.stockCount) {
+                alert(`Cannot exceed available stock limit (${product.stockCount} units remaining)`);
+                newQty = product.stockCount;
+            }
+            newQty = Math.max(0, newQty);
+            
+            input.value = newQty;
             updateCartState(productId, newQty);
         }
 
         function handleQtyInput(productId, value) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
             let parsed = parseInt(value);
             if (isNaN(parsed) || parsed < 0) parsed = 0;
+            
+            if (parsed > product.stockCount) {
+                alert(`Stock cap reached. Only ${product.stockCount} units available.`);
+                parsed = product.stockCount;
+                document.getElementById(`qty-${productId}`).value = parsed;
+            }
             
             updateCartState(productId, parsed);
         }
@@ -655,10 +686,21 @@
                     return; 
                 }
 
-                const badgeClass = p.inStock ? 'badge-instock' : 'badge-outstock';
-                const badgeText = p.inStock ? 'Available' : 'Out of Stock';
-                const btnDisabled = p.inStock ? '' : 'disabled';
+                // Determine dynamic stock level badges
+                let badgeClass = 'badge-instock';
+                let badgeText = 'Available';
+                let isAvailable = true;
+
+                if (p.stockCount <= 0) {
+                    badgeClass = 'badge-outstock';
+                    badgeText = 'Out of Stock';
+                    isAvailable = false;
+                } else if (p.stockCount <= 3) {
+                    badgeClass = 'badge-lowstock';
+                    badgeText = 'Low Stock';
+                }
                 
+                const btnDisabled = isAvailable ? '' : 'disabled';
                 const currentQtyValue = cartState[p.id] || 0;
 
                 grid.innerHTML += `
@@ -669,21 +711,25 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-title">${p.name}</h3>
+                            <div class="stock-indicator">
+                                <i data-lucide="boxes" size="14"></i> 
+                                ${isAvailable ? `${p.stockCount} units available` : 'Restocking soon'}
+                            </div>
                             <div class="price-row">
                                 <span class="price-label">Price</span>
                                 <span class="price-val">₦${p.price.toLocaleString()}</span>
                             </div>
                             
-                            ${p.inStock ? `
+                            ${isAvailable ? `
                                 <div class="quantity-control">
                                     <button class="qty-btn" onclick="changeQty('${p.id}', -1)">-</button>
-                                    <input type="number" class="qty-input" id="qty-${p.id}" value="${currentQtyValue}" min="0" oninput="handleQtyInput('${p.id}', this.value)">
+                                    <input type="number" class="qty-input" id="qty-${p.id}" value="${currentQtyValue}" min="0" max="${p.stockCount}" oninput="handleQtyInput('${p.id}', this.value)">
                                     <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
                                 </div>
                             ` : ''}
 
                             <button onclick="changeQty('${p.id}', 1)" class="order-btn ${btnDisabled}">
-                                <i data-lucide="shopping-cart"></i> ${p.inStock ? 'Add to Order' : 'Restocking'}
+                                <i data-lucide="shopping-cart"></i> ${isAvailable ? 'Add to Order' : 'Restocking'}
                             </button>
                         </div>
                     </div>
@@ -706,7 +752,7 @@
             const item = products.find(p => p.id === targetId);
             if (item) {
                 document.getElementById('modifyPrice').value = item.price;
-                document.getElementById('modifyStock').value = item.inStock.toString();
+                document.getElementById('modifyStockCount').value = item.stockCount;
             }
         }
 
@@ -734,14 +780,21 @@
         function applySystemModifications() {
             const targetId = document.getElementById('targetProduct').value;
             const updatedPrice = parseFloat(document.getElementById('modifyPrice').value);
-            const updatedStock = document.getElementById('modifyStock').value === 'true';
+            const updatedStockCount = parseInt(document.getElementById('modifyStockCount').value) || 0;
 
             const idx = products.findIndex(p => p.id === targetId);
             if (idx !== -1) {
                 products[idx].price = updatedPrice;
-                products[idx].inStock = updatedStock;
+                products[idx].stockCount = updatedStockCount;
                 
-                if (!updatedStock) delete cartState[targetId];
+                // Clear cart tracking if it was changed to zero units
+                if (updatedStockCount <= 0 || (cartState[targetId] && cartState[targetId] > updatedStockCount)) {
+                     if(updatedStockCount <= 0) {
+                         delete cartState[targetId];
+                     } else {
+                         cartState[targetId] = updatedStockCount;
+                     }
+                }
                 
                 renderStorefront();
                 closeModal('adminModal');
@@ -754,4 +807,3 @@
     </script>
 </body>
 </html>
-
