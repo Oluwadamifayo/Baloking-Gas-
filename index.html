@@ -26,7 +26,7 @@
         body {
             background-color: var(--bg-main);
             color: var(--text-primary);
-            padding-bottom: 60px;
+            padding-bottom: 120px;
         }
 
         header {
@@ -204,6 +204,49 @@
             color: var(--text-primary);
         }
 
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .qty-input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .qty-input:focus {
+            outline: none;
+        }
+
         .order-btn {
             width: 100%;
             background-color: var(--accent-orange);
@@ -230,6 +273,68 @@
             color: #64748b !important;
             cursor: not-allowed;
             pointer-events: none;
+        }
+
+        /* Fixed Footer Cart Bar styling */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            z-index: 90;
+            display: none;
+            box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-bar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .cart-summary-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-summary-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .cart-summary-total {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .cart-checkout-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 0.85rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            transition: filter 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+        }
+
+        .cart-checkout-btn:hover {
+            filter: brightness(0.9);
         }
 
         .modal-overlay {
@@ -329,6 +434,18 @@
             </div>
     </section>
 
+    <div class="cart-bar" id="globalCartBar">
+        <div class="cart-bar-container">
+            <div class="cart-summary-text">
+                <span class="cart-summary-title" id="cartSummaryItems">Selected Items (0)</span>
+                <span class="cart-summary-total" id="cartSummaryTotal">₦0</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="sendCartToWhatsApp()">
+                <i data-lucide="send"></i> Send Order via WhatsApp
+            </button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="authModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -401,6 +518,83 @@
             }
         ];
 
+        // State machine object dictionary tracker for quantity allocations
+        let cartState = {};
+
+        function changeQty(productId, amount) {
+            const input = document.getElementById(`qty-${productId}`);
+            if (!input) return;
+            
+            let currentQty = parseInt(input.value) || 0;
+            let newQty = Math.max(0, currentQty + amount);
+            input.value = newQty;
+            
+            updateCartState(productId, newQty);
+        }
+
+        function handleQtyInput(productId, value) {
+            let parsed = parseInt(value);
+            if (isNaN(parsed) || parsed < 0) parsed = 0;
+            
+            updateCartState(productId, parsed);
+        }
+
+        function updateCartState(productId, qty) {
+            if (qty > 0) {
+                cartState[productId] = qty;
+            } else {
+                delete cartState[productId];
+            }
+            calculateCartTotals();
+        }
+
+        function calculateCartTotals() {
+            let totalItemsCount = 0;
+            let totalCurrencyCost = 0;
+
+            Object.keys(cartState).forEach(pid => {
+                const product = products.find(p => p.id === pid);
+                if (product) {
+                    const quantity = cartState[pid];
+                    totalItemsCount += quantity;
+                    totalCurrencyCost += (product.price * quantity);
+                }
+            });
+
+            const cartBar = document.getElementById('globalCartBar');
+            if (totalItemsCount > 0) {
+                cartBar.style.display = 'block';
+                document.getElementById('cartSummaryItems').innerText = `Selected Items (${totalItemsCount})`;
+                document.getElementById('cartSummaryTotal').innerText = `₦${totalCurrencyCost.toLocaleString()}`;
+            } else {
+                cartBar.style.display = 'none';
+            }
+        }
+
+        function sendCartToWhatsApp() {
+            if (Object.keys(cartState).length === 0) return;
+
+            let messageString = "Hello Baloking Gas, I would like to place an order for the following items:\n\n";
+            let totalCost = 0;
+
+            Object.keys(cartState).forEach((pid, index) => {
+                const product = products.find(p => p.id === pid);
+                if (product) {
+                    const qty = cartState[pid];
+                    const dynamicSubtotal = product.price * qty;
+                    totalCost += dynamicSubtotal;
+                    messageString += `${index + 1}. *${product.name}*\n   Quantity: ${qty}\n   Subtotal: ₦${dynamicSubtotal.toLocaleString()}\n\n`;
+                }
+            });
+
+            messageString += `*Total Order Value:* ₦${totalCost.toLocaleString()}\n\nPlease confirm availability and delivery terms.`;
+            
+            const universalEncodedText = encodeURIComponent(messageString);
+            const targetWhatsAppEndpoint = `https://wa.me/2348160922263?text=${universalEncodedText}`;
+            
+            window.open(targetWhatsAppEndpoint, '_blank');
+        }
+
         function renderStorefront() {
             const grid = document.getElementById('storefront-grid');
             grid.innerHTML = '';
@@ -409,12 +603,9 @@
                 const badgeClass = p.inStock ? 'badge-instock' : 'badge-outstock';
                 const badgeText = p.inStock ? 'Available' : 'Out of Stock';
                 const btnDisabled = p.inStock ? '' : 'disabled';
-                const btnText = p.inStock ? 'Order via WhatsApp' : 'Restocking';
-
-                const messageText = encodeURIComponent(`Hello Baloking Gas, I want to purchase the ${p.name} currently listed at ₦${p.price.toLocaleString()}. Please confirm availability.`);
                 
-                // Updated WhatsApp number variable target configuration
-                const whatsappUrl = `https://wa.me/2348160922263?text=${messageText}`;
+                // Read current values to prevent refresh state clears during admin panels adjustments
+                const currentQtyValue = cartState[p.id] || 0;
 
                 grid.innerHTML += `
                     <div class="product-card">
@@ -428,14 +619,24 @@
                                 <span class="price-label">Price</span>
                                 <span class="price-val">₦${p.price.toLocaleString()}</span>
                             </div>
-                            <a href="${whatsappUrl}" target="_blank" class="order-btn ${btnDisabled}">
-                                <i data-lucide="phone"></i> ${btnText}
-                            </a>
+                            
+                            ${p.inStock ? `
+                                <div class="quantity-control">
+                                    <button class="qty-btn" onclick="changeQty('${p.id}', -1)">-</button>
+                                    <input type="number" class="qty-input" id="qty-${p.id}" value="${currentQtyValue}" min="0" oninput="handleQtyInput('${p.id}', this.value)">
+                                    <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
+                                </div>
+                            ` : ''}
+
+                            <button onclick="changeQty('${p.id}', 1)" class="order-btn ${btnDisabled}">
+                                <i data-lucide="shopping-cart"></i> ${p.inStock ? 'Add to Order' : 'Restocking'}
+                            </button>
                         </div>
                     </div>
                 `;
             });
             lucide.createIcons();
+            calculateCartTotals();
         }
 
         function populateAdminOptions() {
@@ -485,6 +686,10 @@
             if (idx !== -1) {
                 products[idx].price = updatedPrice;
                 products[idx].inStock = updatedStock;
+                
+                // Drop from cart if marked out of stock by management modifications actions
+                if (!updatedStock) delete cartState[targetId];
+                
                 renderStorefront();
                 closeModal('adminModal');
             }
