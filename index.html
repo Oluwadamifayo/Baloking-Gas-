@@ -98,9 +98,42 @@
         .hero p {
             color: var(--text-secondary);
             max-width: 600px;
-            margin: 0 auto 2rem;
+            margin: 0 auto 1.5rem;
             font-size: 1rem;
             line-height: 1.5;
+        }
+
+        /* Search Wrapper Bar Component Styles */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
         }
 
         .store-container {
@@ -426,6 +459,11 @@
     <main class="hero">
         <h1>Industrial Gas & Supply Depot</h1>
         <p>Premium grade LPG distribution, safety certified cylinders, and accessories delivered directly safely with absolute speed precision.</p>
+        
+        <div class="search-container">
+            <i data-lucide="search" class="search-icon" size="18"></i>
+            <input type="text" id="storeSearch" class="search-input" placeholder="Search cylinders or accessories..." oninput="renderStorefront()">
+        </div>
     </main>
 
     <section class="store-container">
@@ -604,7 +642,15 @@
             const grid = document.getElementById('storefront-grid');
             grid.innerHTML = '';
 
+            // Extract terms from the new search input element
+            const searchQuery = (document.getElementById('storeSearch')?.value || '').toLowerCase().trim();
+
             products.forEach(p => {
+                // Filter validation step
+                if (searchQuery && !p.name.toLowerCase().includes(searchQuery)) {
+                    return; 
+                }
+
                 const badgeClass = p.inStock ? 'badge-instock' : 'badge-outstock';
                 const badgeText = p.inStock ? 'Available' : 'Out of Stock';
                 const btnDisabled = p.inStock ? '' : 'disabled';
