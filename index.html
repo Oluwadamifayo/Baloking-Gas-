@@ -534,7 +534,6 @@
     </div>
 
     <script>
-        // Track numerical stock limits
         let products = [
             {
                 id: "item-6kg",
@@ -572,11 +571,18 @@
                 imgUrl: "https://i.ibb.co/wF3VFP10/5455f349d94656570c5463b79a1ae831.jpg"
             },
             {
-                id: "item-white-hose",
+                id: "item-burner-complete",
                 name: "Stainless Burner Complete",
                 price: 15000,
                 stockCount: 18,
                 imgUrl: "https://i.ibb.co/nMGDRhvq/0157748126000e8e204725918e72bae3.jpg"
+            },
+            {
+                id: "item-white-hose",
+                name: "White Hose Bundle",
+                price: 8000,
+                stockCount: 15,
+                imgUrl: "https://i.ibb.co/7tWfYZb6/695d126f2b0aeb1f6adcfd34636a228f.jpg"
             }
         ];
 
@@ -592,7 +598,6 @@
             let currentQty = parseInt(input.value) || 0;
             let newQty = currentQty + amount;
             
-            // Limit selection by available physical stock constraints
             if (newQty > product.stockCount) {
                 alert(`Cannot exceed available stock limit (${product.stockCount} units remaining)`);
                 newQty = product.stockCount;
@@ -686,7 +691,6 @@
                     return; 
                 }
 
-                // Determine dynamic stock level badges
                 let badgeClass = 'badge-instock';
                 let badgeText = 'Available';
                 let isAvailable = true;
@@ -787,7 +791,6 @@
                 products[idx].price = updatedPrice;
                 products[idx].stockCount = updatedStockCount;
                 
-                // Clear cart tracking if it was changed to zero units
                 if (updatedStockCount <= 0 || (cartState[targetId] && cartState[targetId] > updatedStockCount)) {
                      if(updatedStockCount <= 0) {
                          delete cartState[targetId];
