@@ -495,7 +495,6 @@
             border-color: var(--accent-orange);
         }
 
-        /* Cart Viewer Specific Layout UI */
         .cart-items-list {
             overflow-y: auto;
             flex-grow: 1;
@@ -767,6 +766,13 @@
                 price: 3500, 
                 stockCount: 20, 
                 imgUrl: "https://i.ibb.co/XfKJrtKF/1e7ef5a37ce3ad6a0fb1b2137ceb5ba8.jpg"
+            },
+            {
+                id: "item-gas-control",
+                name: "Gas Control",
+                price: 5000, 
+                stockCount: 10, 
+                imgUrl: "https://i.ibb.co/kg6qwNgf/images-4.jpg"
             }
         ];
 
@@ -844,11 +850,9 @@
             
             calculateCartTotals();
             
-            // Sync up inputs on grid rows if they exist
             const input = document.getElementById(`qty-${productId}`);
             if (input) input.value = qty;
 
-            // Re-render modal if open
             if (document.getElementById('cartViewerModal').classList.contains('active')) {
                 renderCartViewerList();
             }
@@ -883,13 +887,11 @@
             }
         }
 
-        // Opens itemized modal overview
         function openCartViewerModal(event) {
             renderCartViewerList();
             document.getElementById('cartViewerModal').classList.add('active');
         }
 
-        // Renders item entries inside structural cart modal
         function renderCartViewerList() {
             const listContainer = document.getElementById('cartViewerListContainer');
             listContainer.innerHTML = '';
@@ -930,7 +932,7 @@
         }
 
         function sendCartToWhatsApp(event) {
-            if (event) event.stopPropagation(); // Stops toggle loops
+            if (event) event.stopPropagation();
             if (Object.keys(cartState).length === 0) return;
 
             let messageString = "Hello Baloking Gas, I would like to place an order for the following items:\n\n";
