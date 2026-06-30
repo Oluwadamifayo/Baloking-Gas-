@@ -659,11 +659,11 @@
                 </select>
             </div>
             <div class="form-group" id="adminPriceGroup">
-                <label>Set Rate Surcharge / Bundle Price (₦)</label>
+                <label>Set 3kg Seat / Bundle Price (₦)</label>
                 <input type="number" class="form-control" id="modifyPrice">
             </div>
             <div class="form-group" id="adminYardPriceGroup" style="display: none;">
-                <label>Set Price Per Yard (₦)</label>
+                <label>Set 6kg Seat / Yard Price (₦)</label>
                 <input type="number" class="form-control" id="modifyYardPrice">
             </div>
             <div class="form-group">
@@ -762,6 +762,7 @@
                 price: 8000, 
                 yardPrice: 1200, 
                 hasOptions: true,
+                optionType: "measurement",
                 stockCount: 15,
                 imgUrl: "https://i.ibb.co/7tWfYZb6/695d126f2b0aeb1f6adcfd34636a228f.jpg"
             },
@@ -771,8 +772,19 @@
                 price: 8000, 
                 yardPrice: 1200, 
                 hasOptions: true,
+                optionType: "measurement",
                 stockCount: 15,
                 imgUrl: "https://i.ibb.co/mFhzf0WR/8adc628a1102026a4cbb8cab7bad76af.jpg"
+            },
+            {
+                id: "item-cylinder-seat",
+                name: "Cylinder Seat Ring",
+                price: 5000, 
+                yardPrice: 7000, 
+                hasOptions: true,
+                optionType: "seatSize",
+                stockCount: 15,
+                imgUrl: "https://i.ibb.co/pvzjLjcp/images-9.jpg"
             },
             {
                 id: "item-spray-paint",
@@ -850,7 +862,15 @@
             
             const product = products.find(p => p.id === productId);
             const targetDisplayPrice = selectedMode === 'yard' ? product.yardPrice : product.price;
-            const targetLabel = selectedMode === 'yard' ? 'Price (Per Yard)' : 'Price (Bundle)';
+            
+            let targetLabel = 'Price';
+            if (product.hasOptions) {
+                if (product.optionType === 'seatSize') {
+                    targetLabel = selectedMode === 'yard' ? 'Price (6kg Seat)' : 'Price (3kg Seat)';
+                } else {
+                    targetLabel = selectedMode === 'yard' ? 'Price (Per Yard)' : 'Price (Bundle)';
+                }
+            }
             
             const pVal = document.getElementById(`price-val-${productId}`);
             const pLbl = document.getElementById(`price-label-${productId}`);
@@ -935,7 +955,16 @@
                     const qty = cartState[pid].qty;
                     const mode = cartState[pid].mode || 'bundle';
                     const activePrice = (mode === 'yard' && product.hasOptions) ? product.yardPrice : product.price;
-                    const modeLabel = product.hasOptions ? (mode === 'yard' ? 'Per Yard' : 'Full Bundle') : '';
+                    
+                    let modeLabel = '';
+                    if (product.hasOptions) {
+                        if (product.optionType === 'seatSize') {
+                            modeLabel = mode === 'yard' ? '6kg Size' : '3kg Size';
+                        } else {
+                            modeLabel = mode === 'yard' ? 'Per Yard' : 'Full Bundle';
+                        }
+                    }
+                    
                     const itemSubtotal = activePrice * qty;
 
                     listContainer.innerHTML += `
@@ -972,7 +1001,15 @@
                     const qty = cartState[pid].qty;
                     const mode = cartState[pid].mode || 'bundle';
                     const activeUnitPrice = (mode === 'yard' && product.hasOptions) ? product.yardPrice : product.price;
-                    const modeLabel = product.hasOptions ? ` (${mode === 'yard' ? 'Per Yard' : 'Full Bundle'})` : '';
+                    
+                    let modeLabel = '';
+                    if (product.hasOptions) {
+                        if (product.optionType === 'seatSize') {
+                            modeLabel = ` (${mode === 'yard' ? '6kg Size' : '3kg Size'})`;
+                        } else {
+                            modeLabel = ` (${mode === 'yard' ? 'Per Yard' : 'Full Bundle'})`;
+                        }
+                    }
                     
                     const dynamicSubtotal = activeUnitPrice * qty;
                     totalCost += dynamicSubtotal;
@@ -1017,7 +1054,15 @@
                 const currentModeValue = cartState[p.id] ? cartState[p.id].mode : 'bundle';
                 
                 const displayPrice = (currentModeValue === 'yard' && p.hasOptions) ? p.yardPrice : p.price;
-                const displayLabel = (currentModeValue === 'yard' && p.hasOptions) ? 'Price (Per Yard)' : 'Price';
+                
+                let displayLabel = 'Price';
+                if (p.hasOptions) {
+                    if (p.optionType === 'seatSize') {
+                        displayLabel = currentModeValue === 'yard' ? 'Price (6kg Seat)' : 'Price (3kg Seat)';
+                    } else {
+                        displayLabel = currentModeValue === 'yard' ? 'Price (Per Yard)' : 'Price';
+                    }
+                }
 
                 grid.innerHTML += `
                     <div class="product-card">
@@ -1034,8 +1079,13 @@
                             
                             ${p.hasOptions && isAvailable ? `
                                 <select class="pricing-type-select" id="select-type-${p.id}" onchange="handleTypeSelectionChange('${p.id}', this.value)">
-                                    <option value="bundle" ${currentModeValue === 'bundle' ? 'selected' : ''}>Full Bundle Pack</option>
-                                    <option value="yard" ${currentModeValue === 'yard' ? 'selected' : ''}>Measure Per Yard</option>
+                                    ${p.optionType === 'seatSize' ? `
+                                        <option value="bundle" ${currentModeValue === 'bundle' ? 'selected' : ''}>3kg Cylinder Seat Size</option>
+                                        <option value="yard" ${currentModeValue === 'yard' ? 'selected' : ''}>6kg Cylinder Seat Size</option>
+                                    ` : `
+                                        <option value="bundle" ${currentModeValue === 'bundle' ? 'selected' : ''}>Full Bundle Pack</option>
+                                        <option value="yard" ${currentModeValue === 'yard' ? 'selected' : ''}>Measure Per Yard</option>
+                                    `}
                                 </select>
                             ` : ''}
 
@@ -1078,12 +1128,24 @@
                 document.getElementById('modifyPrice').value = item.price;
                 document.getElementById('modifyStockCount').value = item.stockCount;
                 
+                const priceGroupLabel = document.querySelector('#adminPriceGroup label');
                 const yardPriceGroup = document.getElementById('adminYardPriceGroup');
+                const yardPriceLabel = document.querySelector('#adminYardPriceGroup label');
+                
                 if (item.hasOptions) {
                     yardPriceGroup.style.display = 'block';
                     document.getElementById('modifyYardPrice').value = item.yardPrice || 0;
+                    
+                    if (item.optionType === 'seatSize') {
+                        priceGroupLabel.innerText = "Set 3kg Seat Price (₦)";
+                        yardPriceLabel.innerText = "Set 6kg Seat Price (₦)";
+                    } else {
+                        priceGroupLabel.innerText = "Set Bundle Price (₦)";
+                        yardPriceLabel.innerText = "Set Price Per Yard (₦)";
+                    }
                 } else {
                     yardPriceGroup.style.display = 'none';
+                    priceGroupLabel.innerText = "Set Rate Surcharge / Bundle Price (₦)";
                 }
             }
         }
