@@ -659,11 +659,11 @@
                 </select>
             </div>
             <div class="form-group" id="adminPriceGroup">
-                <label>Set 3kg Seat / Bundle Price (₦)</label>
+                <label>Set Surcharge Price / Bundle Price (₦)</label>
                 <input type="number" class="form-control" id="modifyPrice">
             </div>
             <div class="form-group" id="adminYardPriceGroup" style="display: none;">
-                <label>Set 6kg Seat / Yard Price (₦)</label>
+                <label>Set Secondary Option Price (₦)</label>
                 <input type="number" class="form-control" id="modifyYardPrice">
             </div>
             <div class="form-group">
@@ -748,6 +748,13 @@
                 price: 25000,
                 stockCount: 10,
                 imgUrl: "https://i.ibb.co/wF3VFP10/5455f349d94656570c5463b79a1ae831.jpg"
+            },
+            {
+                id: "item-2face-burner",
+                name: "2 Face Burner Stove",
+                price: 25000,
+                stockCount: 8,
+                imgUrl: "https://i.ibb.co/6hjw8R3/images-2-1782886768616.jpg"
             },
             {
                 id: "item-burner-complete",
@@ -1145,7 +1152,7 @@
                     }
                 } else {
                     yardPriceGroup.style.display = 'none';
-                    priceGroupLabel.innerText = "Set Rate Surcharge / Bundle Price (₦)";
+                    priceGroupLabel.innerText = "Set Surcharge Price / Bundle Price (₦)";
                 }
             }
         }
