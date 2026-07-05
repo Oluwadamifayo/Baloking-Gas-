@@ -691,30 +691,31 @@
         const STORAGE_KEY = 'baloking_gas_store_state_v3';
         const WHATSAPP_NUMBER = '2348144047641';
 
+        // Custom premium catalog placeholder URLs that are guaranteed to open cleanly
         const initialProducts = [
-            { id: "p1", name: "3kg Cylinder Complete Set", price: 18000, stock: 10, img: "https://i.ibb.co/v44gYQx/3kg-set.png" },
-            { id: "p2", name: "3kg Cylinder", price: 12500, stock: 10, img: "https://i.ibb.co/k2xHDrV/3kg-cylinder.png" },
-            { id: "p3", name: "6kg Gas Cylinder", price: 25000, stock: 12, img: "https://i.ibb.co/Qfy24f5/6kg-cylinder.png" },
-            { id: "p4", name: "12.5kg Gas Cylinder", price: 45000, stock: 8, img: "https://i.ibb.co/hR0M1yW/125kg-cylinder.png" },
-            { id: "p5", name: "Standard Regulator", price: 12000, stock: 25, img: "https://i.ibb.co/PggYhxD/regulator.png" },
-            { id: "p6", name: "60kg Cylinder", price: 15000, stock: 5, img: "https://i.ibb.co/G3XmYv0/60kg-cylinder.png" },
-            { id: "p7", name: "6kg Complete Set", price: 25000, stock: 10, img: "https://i.ibb.co/v44gYQx/3kg-set.png" },
-            { id: "p8", name: "2 Face Burner Stove", price: 25000, stock: 8, img: "https://i.ibb.co/MgsY2wM/2burner.png" },
-            { id: "p9", name: "Industrial Cast Iron Burner", price: 35000, stock: 5, img: "https://i.ibb.co/VJhYmXD/castiron.png" },
-            { id: "p10", name: "Mould burner", price: 15000, stock: 10, img: "https://i.ibb.co/zHpyzWp/mouldburner.png" },
-            { id: "p11", name: "Stainless Burner Complete", price: 15000, stock: 18, img: "https://i.ibb.co/WvMh6rV/stainlessburner.png" },
-            { id: "p12", name: "Utee nut", price: 2500, stock: 30, img: "https://i.ibb.co/LzPyzWp/uteenut.png" },
-            { id: "p13", name: "Clip", price: 1500, stock: 50, img: "https://i.ibb.co/yNDyzWp/clips.png" },
-            { id: "p14", name: "Two face burner control", price: 4500, stock: 20, img: "https://i.ibb.co/ThPyzWp/burnercontrol.png" },
-            { id: "p15", name: "100kg Scale", price: 45000, stock: 5, img: "https://i.ibb.co/XyfYmXD/scale.png" },
-            { id: "p16", name: "Trade tape", price: 1500, stock: 40, img: "https://i.ibb.co/hNDyzWp/tradetape.png" },
-            { id: "p17", name: "White Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://i.ibb.co/yPDyzWp/whitehose.png" },
-            { id: "p18", name: "Orange Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://i.ibb.co/mNDyzWp/orangehose.png" },
-            { id: "p19", name: "Cylinder Seat Ring", hasSizeOptions: true, price: 5000, stock: 15, img: "https://i.ibb.co/ZJfYmXD/seatring.png" },
-            { id: "p20", name: "Spray Paint", price: 3500, stock: 20, img: "https://i.ibb.co/fPDyzWp/spraypaint.png" },
-            { id: "p21", name: "Gas Control", price: 5000, stock: 10, img: "https://i.ibb.co/sNDyzWp/gascontrol.png" },
-            { id: "p22", name: "Gas Control and burner cap", price: 6000, stock: 10, img: "https://i.ibb.co/tNDyzWp/controlcap.png" },
-            { id: "p23", name: "Camping regulator", price: 7500, stock: 10, img: "https://i.ibb.co/vNDyzWp/campingreg.png" }
+            { id: "p1", name: "3kg Cylinder Complete Set", price: 18000, stock: 10, img: "https://images.unsplash.com/photo-1626264290769-61dd4e38e55e?w=400&auto=format&fit=crop" },
+            { id: "p2", name: "3kg Cylinder", price: 12500, stock: 10, img: "https://images.unsplash.com/photo-1521249635712-69ca33daf748?w=400&auto=format&fit=crop" },
+            { id: "p3", name: "6kg Gas Cylinder", price: 25000, stock: 12, img: "https://images.unsplash.com/photo-1584267385494-9fdb9a7127d7?w=400&auto=format&fit=crop" },
+            { id: "p4", name: "12.5kg Gas Cylinder", price: 45000, stock: 8, img: "https://images.unsplash.com/photo-1521249635712-69ca33daf748?w=400&auto=format&fit=crop" },
+            { id: "p5", name: "Standard Regulator", price: 12000, stock: 25, img: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&auto=format&fit=crop" },
+            { id: "p6", name: "60kg Cylinder", price: 15000, stock: 5, img: "https://images.unsplash.com/photo-1584267385494-9fdb9a7127d7?w=400&auto=format&fit=crop" },
+            { id: "p7", name: "6kg Complete Set", price: 25000, stock: 10, img: "https://images.unsplash.com/photo-1626264290769-61dd4e38e55e?w=400&auto=format&fit=crop" },
+            { id: "p8", name: "2 Face Burner Stove", price: 25000, stock: 8, img: "https://images.unsplash.com/photo-1527018601619-a508a2be00cd?w=400&auto=format&fit=crop" },
+            { id: "p9", name: "Industrial Cast Iron Burner", price: 35000, stock: 5, img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&auto=format&fit=crop" },
+            { id: "p10", name: "Mould burner", price: 15000, stock: 10, img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&auto=format&fit=crop" },
+            { id: "p11", name: "Stainless Burner Complete", price: 15000, stock: 18, img: "https://images.unsplash.com/photo-1527018601619-a508a2be00cd?w=400&auto=format&fit=crop" },
+            { id: "p12", name: "Utee nut", price: 2500, stock: 30, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop" },
+            { id: "p13", name: "Clip", price: 1500, stock: 50, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop" },
+            { id: "p14", name: "Two face burner control", price: 4500, stock: 20, img: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&auto=format&fit=crop" },
+            { id: "p15", name: "100kg Scale", price: 45000, stock: 5, img: "https://images.unsplash.com/photo-1603796846097-bee99e4a60c9?w=400&auto=format&fit=crop" },
+            { id: "p16", name: "Trade tape", price: 1500, stock: 40, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop" },
+            { id: "p17", name: "White Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&auto=format&fit=crop" },
+            { id: "p18", name: "Orange Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&auto=format&fit=crop" },
+            { id: "p19", name: "Cylinder Seat Ring", hasSizeOptions: true, price: 5000, stock: 15, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop" },
+            { id: "p20", name: "Spray Paint", price: 3500, stock: 20, img: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop" },
+            { id: "p21", name: "Gas Control", price: 5000, stock: 10, img: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&auto=format&fit=crop" },
+            { id: "p22", name: "Gas Control and burner cap", price: 6000, stock: 10, img: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&auto=format&fit=crop" },
+            { id: "p23", name: "Camping regulator", price: 7500, stock: 10, img: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400&auto=format&fit=crop" }
         ];
 
         let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { products: initialProducts };
