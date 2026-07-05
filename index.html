@@ -173,7 +173,7 @@
         .img-container {
             width: 100%;
             height: 240px;
-            background-color: #f1f5f9;
+            background-color: #ffffff;
             position: relative;
             display: flex;
             align-items: center;
@@ -684,4 +684,256 @@
             </div>
             <div class="cart-items-list" id="cartViewerListContainer">
             </div>
-        </di
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'baloking_gas_store_state_v3';
+        const WHATSAPP_NUMBER = '2348144047641';
+
+        const initialProducts = [
+            { id: "p1", name: "3kg Cylinder Complete Set", price: 18000, stock: 10, img: "https://i.ibb.co/v44gYQx/3kg-set.png" },
+            { id: "p2", name: "3kg Cylinder", price: 12500, stock: 10, img: "https://i.ibb.co/k2xHDrV/3kg-cylinder.png" },
+            { id: "p3", name: "6kg Gas Cylinder", price: 25000, stock: 12, img: "https://i.ibb.co/Qfy24f5/6kg-cylinder.png" },
+            { id: "p4", name: "12.5kg Gas Cylinder", price: 45000, stock: 8, img: "https://i.ibb.co/hR0M1yW/125kg-cylinder.png" },
+            { id: "p5", name: "Standard Regulator", price: 12000, stock: 25, img: "https://i.ibb.co/PggYhxD/regulator.png" },
+            { id: "p6", name: "60kg Cylinder", price: 15000, stock: 5, img: "https://i.ibb.co/G3XmYv0/60kg-cylinder.png" },
+            { id: "p7", name: "6kg Complete Set", price: 25000, stock: 10, img: "https://i.ibb.co/v44gYQx/3kg-set.png" },
+            { id: "p8", name: "2 Face Burner Stove", price: 25000, stock: 8, img: "https://i.ibb.co/MgsY2wM/2burner.png" },
+            { id: "p9", name: "Industrial Cast Iron Burner", price: 35000, stock: 5, img: "https://i.ibb.co/VJhYmXD/castiron.png" },
+            { id: "p10", name: "Mould burner", price: 15000, stock: 10, img: "https://i.ibb.co/zHpyzWp/mouldburner.png" },
+            { id: "p11", name: "Stainless Burner Complete", price: 15000, stock: 18, img: "https://i.ibb.co/WvMh6rV/stainlessburner.png" },
+            { id: "p12", name: "Utee nut", price: 2500, stock: 30, img: "https://i.ibb.co/LzPyzWp/uteenut.png" },
+            { id: "p13", name: "Clip", price: 1500, stock: 50, img: "https://i.ibb.co/yNDyzWp/clips.png" },
+            { id: "p14", name: "Two face burner control", price: 4500, stock: 20, img: "https://i.ibb.co/ThPyzWp/burnercontrol.png" },
+            { id: "p15", name: "100kg Scale", price: 45000, stock: 5, img: "https://i.ibb.co/XyfYmXD/scale.png" },
+            { id: "p16", name: "Trade tape", price: 1500, stock: 40, img: "https://i.ibb.co/hNDyzWp/tradetape.png" },
+            { id: "p17", name: "White Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://i.ibb.co/yPDyzWp/whitehose.png" },
+            { id: "p18", name: "Orange Hose Bundle", hasBundleOptions: true, price: 8000, stock: 15, img: "https://i.ibb.co/mNDyzWp/orangehose.png" },
+            { id: "p19", name: "Cylinder Seat Ring", hasSizeOptions: true, price: 5000, stock: 15, img: "https://i.ibb.co/ZJfYmXD/seatring.png" },
+            { id: "p20", name: "Spray Paint", price: 3500, stock: 20, img: "https://i.ibb.co/fPDyzWp/spraypaint.png" },
+            { id: "p21", name: "Gas Control", price: 5000, stock: 10, img: "https://i.ibb.co/sNDyzWp/gascontrol.png" },
+            { id: "p22", name: "Gas Control and burner cap", price: 6000, stock: 10, img: "https://i.ibb.co/tNDyzWp/controlcap.png" },
+            { id: "p23", name: "Camping regulator", price: 7500, stock: 10, img: "https://i.ibb.co/vNDyzWp/campingreg.png" }
+        ];
+
+        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { products: initialProducts };
+        let cart = {};
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function renderStorefront() {
+            const grid = document.getElementById('storefront-grid');
+            const searchVal = document.getElementById('storeSearch').value.toLowerCase();
+            grid.innerHTML = '';
+
+            state.products.forEach(p => {
+                if (searchVal && !p.name.toLowerCase().includes(searchVal)) return;
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+
+                let badgeHtml = p.stock > 5 ? `<span class="badge badge-instock">Available</span>` : p.stock > 0 ? `<span class="badge badge-lowstock">Low Stock (${p.stock})</span>` : `<span class="badge badge-outstock">Depleted</span>`;
+                let currentQty = cart[p.id]?.qty || 0;
+
+                let optionSelectorHtml = '';
+                if (p.hasBundleOptions) {
+                    optionSelectorHtml = `
+                        <select class="pricing-type-select">
+                            <option value="full">Full Bundle Pack</option>
+                        </select>
+                    `;
+                } else if (p.hasSizeOptions) {
+                    optionSelectorHtml = `
+                        <select class="pricing-type-select">
+                            <option value="3kg">3kg Cylinder Seat Size</option>
+                        </select>
+                    `;
+                } else {
+                    optionSelectorHtml = '<div style="height: calc(1rem + 33px)"></div>';
+                }
+
+                card.innerHTML = `
+                    <div class="img-container">
+                        ${badgeHtml}
+                        <img src="${p.img}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1584267385494-9fdb9a7127d7?w=400'">
+                    </div>
+                    <div class="product-info">
+                        <h2 class="product-title">${p.name}</h2>
+                        <div class="stock-indicator"><i data-lucide="package" size="14" style="color:#94a3b8"></i> ${p.stock} items available</div>
+                        ${optionSelectorHtml}
+                        <div class="price-row">
+                            <div>
+                                <span class="price-label">Price</span>
+                                <div class="price-val">₦${p.price.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="adjustWidgetQty('${p.id}', -1)">-</button>
+                            <input type="text" class="qty-input" id="qty-input-${p.id}" value="${currentQty}" readonly>
+                            <button class="qty-btn" onclick="adjustWidgetQty('${p.id}', 1)">+</button>
+                        </div>
+                        <button class="order-btn ${p.stock === 0 ? 'disabled' : ''}" onclick="addCartItem('${p.id}')">
+                            <i data-lucide="shopping-cart" size="18"></i> Add to Order
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+            updateGlobalCartBar();
+        }
+
+        function adjustWidgetQty(pid, change) {
+            let current = parseInt(document.getElementById(`qty-input-${pid}`).value) || 0;
+            let target = current + change;
+            if (target < 0) target = 0;
+            document.getElementById(`qty-input-${pid}`).value = target;
+        }
+
+        function addCartItem(pid) {
+            let qty = parseInt(document.getElementById(`qty-input-${pid}`).value) || 0;
+            if (qty <= 0) {
+                delete cart[pid];
+            } else {
+                cart[pid] = { qty };
+            }
+            renderStorefront();
+        }
+
+        function updateGlobalCartBar() {
+            const bar = document.getElementById('globalCartBar');
+            let totalItems = 0;
+            let totalPrice = 0;
+
+            Object.keys(cart).forEach(pid => {
+                let p = state.products.find(x => x.id === pid);
+                if (!p) return;
+                totalItems += cart[pid].qty;
+                totalPrice += p.price * cart[pid].qty;
+            });
+
+            if (totalItems > 0) {
+                bar.style.display = 'block';
+                document.getElementById('cartSummaryItems').innerHTML = `Selected Items (${totalItems}) <i data-lucide="eye" size="14"></i>`;
+                document.getElementById('cartSummaryTotal').innerText = `₦${totalPrice.toLocaleString()}`;
+            } else {
+                bar.style.display = 'none';
+            }
+            lucide.createIcons();
+        }
+
+        function openCartViewerModal(e) {
+            if (e.target.closest('.cart-checkout-btn')) return;
+            const container = document.getElementById('cartViewerListContainer');
+            container.innerHTML = '';
+
+            Object.keys(cart).forEach(pid => {
+                let p = state.products.find(x => x.id === pid);
+                if (!p) return;
+                let subtotal = p.price * cart[pid].qty;
+
+                let row = document.createElement('div');
+                row.className = 'cart-item-row';
+                row.innerHTML = `
+                    <div class="cart-item-thumb"><img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1584267385494-9fdb9a7127d7?w=400'"></div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${p.name}</div>
+                        <div class="cart-item-subtotal">₦${subtotal.toLocaleString()}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-row-btn" onclick="modifyModalCartQty('${pid}', -1)">-</button>
+                        <div class="cart-row-qty">${cart[pid].qty}</div>
+                        <button class="cart-row-btn" onclick="modifyModalCartQty('${pid}', 1)">+</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById('cartViewerModal').classList.add('active');
+        }
+
+        function modifyModalCartQty(pid, change) {
+            if (!cart[pid]) return;
+            cart[pid].qty += change;
+            if (cart[pid].qty <= 0) delete cart[pid];
+            updateGlobalCartBar();
+            if (Object.keys(cart).length === 0) {
+                closeModal('cartViewerModal');
+            } else {
+                openCartViewerModal({ target: document.body });
+            }
+            renderStorefront();
+        }
+
+        function sendCartToWhatsApp(e) {
+            e.stopPropagation();
+            let message = `*BALOKING GAS NG - NEW ORDER REQ*\n\n`;
+            let total = 0;
+
+            Object.keys(cart).forEach(pid => {
+                let p = state.products.find(x => x.id === pid);
+                if (!p) return;
+                let subtotal = p.price * cart[pid].qty;
+                total += subtotal;
+                message += `• ${cart[pid].qty}x ${p.name} -> ₦${subtotal.toLocaleString()}\n`;
+            });
+
+            message += `\n*Order Total Estimate: ₦${total.toLocaleString()}*`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function verifyAccess() {
+            if (document.getElementById('accessPin').value === '2345') {
+                closeModal('authModal');
+                document.getElementById('accessPin').value = '';
+                openAdminPanel();
+            } else {
+                alert('Access Clearance Refused.');
+            }
+        }
+
+        function openAdminPanel() {
+            const select = document.getElementById('targetProduct');
+            select.innerHTML = '';
+            state.products.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p.id;
+                opt.innerText = p.name;
+                select.appendChild(opt);
+            });
+            loadProductMetadata();
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        function loadProductMetadata() {
+            let pid = document.getElementById('targetProduct').value;
+            let p = state.products.find(x => x.id === pid);
+            if (!p) return;
+            document.getElementById('modifyPrice').value = p.price;
+            document.getElementById('modifyStockCount').value = p.stock;
+        }
+
+        function applySystemModifications() {
+            let pid = document.getElementById('targetProduct').value;
+            let p = state.products.find(x => x.id === pid);
+            if (!p) return;
+
+            p.price = parseFloat(document.getElementById('modifyPrice').value) || 0;
+            p.stock = parseInt(document.getElementById('modifyStockCount').value) || 0;
+
+            saveState();
+            closeModal('adminModal');
+            renderStorefront();
+            alert('System modifications published.');
+        }
+
+        window.onload = renderStorefront;
+    </script>
+</body>
+</html>
